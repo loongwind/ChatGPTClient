@@ -2,6 +2,7 @@ import 'package:chatgpt_client/controller/ChatController.dart';
 import 'package:chatgpt_client/model/ChatMessage.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 class ChatContent extends StatefulWidget {
   final ChatSession chatSession;
@@ -64,7 +65,7 @@ class _ChatContentState extends State<ChatContent> {
                     children: [
                       Text("ChatGPT", style: material.Theme.of(context).textTheme.bodySmall,),
                       const SizedBox(height: 10,),
-                      Obx(() => SelectableText(message.message.value, style: material.Theme.of(context).textTheme.bodyMedium)),
+                      Obx(() => MarkdownBody(data: message.message.value)),
                       const SizedBox(height: 10,),
                       Text("model: gpt-3.5-turbo, word count: 417, token estimate: 1036", style: material.Theme.of(context).textTheme.bodySmall)
                     ],
