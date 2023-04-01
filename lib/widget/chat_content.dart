@@ -64,7 +64,7 @@ class _ChatContentState extends State<ChatContent> {
                     children: [
                       Text("ChatGPT", style: material.Theme.of(context).textTheme.bodySmall,),
                       const SizedBox(height: 10,),
-                      Obx(() => Text(message.message.value, style: material.Theme.of(context).textTheme.bodyMedium)),
+                      Obx(() => SelectableText(message.message.value, style: material.Theme.of(context).textTheme.bodyMedium)),
                       const SizedBox(height: 10,),
                       Text("model: gpt-3.5-turbo, word count: 417, token estimate: 1036", style: material.Theme.of(context).textTheme.bodySmall)
                     ],
@@ -98,7 +98,7 @@ class _ChatContentState extends State<ChatContent> {
                     children: [
                       Text("My", style: material.Theme.of(context).textTheme.bodySmall,),
                       const SizedBox(height: 10,),
-                      Text(message.message.value, style: material.Theme.of(context).textTheme.bodyMedium, softWrap: true,)
+                      SelectableText(message.message.value, style: material.Theme.of(context).textTheme.bodyMedium)
                     ],
                   ),
                 ),
