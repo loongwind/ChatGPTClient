@@ -1,5 +1,5 @@
-import 'package:chatgpt_client/controller/ChatController.dart';
-import 'package:chatgpt_client/model/ChatMessage.dart';
+import 'package:chatgpt_client/controller/chat_controller.dart';
+import 'package:chatgpt_client/model/chat_model.dart';
 import 'package:chatgpt_client/widget/chat_content.dart';
 import 'package:chatgpt_client/widget/create_session_dialog.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -80,8 +80,48 @@ class _MainWidgetState extends State<MainWidget> {
               ChatSession session = controller.sessions[index];
               return PaneItem(
                       icon: const Icon(FluentIcons.chat),
-                      title: Text(session.name.value),
+                      title: Text(session.getName()),
                       body: ChatContent(session),
+                      infoBadge: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 40),
+                        child: CommandBar(
+                          primaryItems: [
+                            CommandBarButton(
+                              icon: const Icon(
+                                FluentIcons.edit,
+                                size: 12,
+                              ),
+                              label: const Text('重命名'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                showCreateSessionDialog(context, session:session);
+                              },
+                            ),
+                            CommandBarButton(
+                              icon: const Icon(
+                                FluentIcons.clear,
+                                size: 12,
+                              ),
+                              label: const Text('清除聊天记录'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                controller.cleanChatMessage(session);
+                              },
+                            ),
+                            CommandBarButton(
+                              icon: const Icon(
+                                FluentIcons.delete,
+                                size: 12,
+                              ),
+                              label: const Text('删除'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                controller.deleteChatSession(session);
+                              },
+                            ),
+                          ],
+                        ),
+                      )
                     );
             }),
             footerItems: [

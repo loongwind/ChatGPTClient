@@ -1,13 +1,13 @@
 
-import 'package:chatgpt_client/controller/ChatController.dart';
-import 'package:chatgpt_client/model/ChatMessage.dart';
+import 'package:chatgpt_client/controller/chat_controller.dart';
+import 'package:chatgpt_client/model/chat_model.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
 
 void showCreateSessionDialog(BuildContext context, {ChatSession? session}) async {
   TextEditingController nameController = TextEditingController();
   if(session != null){
-    nameController.text = session.name.value;
+    nameController.text = session.getName();
   }
   await showDialog<String>(
     context: context,
@@ -44,9 +44,11 @@ void showCreateSessionDialog(BuildContext context, {ChatSession? session}) async
             ChatController controller = Get.find();
             String name = nameController.text;
             if(session != null){
-              session.name.value = name;
+              session.setName(name);
+              controller.updateSession(session);
             }else{
-              ChatSession chatSession = ChatSession(name);
+              ChatSession chatSession = ChatSession();
+              chatSession.setName(name);
               controller.addSession(chatSession);
             }
             Navigator.pop(context);

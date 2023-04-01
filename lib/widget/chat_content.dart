@@ -1,5 +1,5 @@
-import 'package:chatgpt_client/controller/ChatController.dart';
-import 'package:chatgpt_client/model/ChatMessage.dart';
+import 'package:chatgpt_client/controller/chat_controller.dart';
+import 'package:chatgpt_client/model/chat_model.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -20,6 +20,17 @@ class _ChatContentState extends State<ChatContent> {
   @override
   void initState() {
     super.initState();
+    print("---------------------------${identityHashCode(controller)}");
+    scrollController.addListener(() {
+      controller.scrollOffset = scrollController.offset;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      scrollController.jumpTo(controller.scrollOffset);
+    });
+  }
+
+  void _scrollToBottom() {
+    scrollController.animateTo(scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 10), curve: Curves.ease);
   }
 
   @override
@@ -30,9 +41,9 @@ class _ChatContentState extends State<ChatContent> {
         children: [
           Expanded(
             child: Obx(() => ListView.builder(itemBuilder: (context, index){
-                ChatMessage chatMsg = widget.chatSession.messages[index];
+                ChatMessage chatMsg = widget.chatSession.getMessage(index);
                 return chatMsg.isChatGPT ?  buildGPTMessage(chatMsg) : buildMyMessage(chatMsg);
-              }, itemCount: widget.chatSession.messages.length, controller: scrollController,),
+              }, itemCount: widget.chatSession.getMessagesSize(), controller: scrollController,),
             ),
           ),
           buildEdit(),
@@ -65,7 +76,7 @@ class _ChatContentState extends State<ChatContent> {
                     children: [
                       Text("ChatGPT", style: material.Theme.of(context).textTheme.bodySmall,),
                       const SizedBox(height: 10,),
-                      Obx(() => MarkdownBody(data: message.message.value)),
+                      Obx(() => SelectableText(message.getMessage(), style: material.Theme.of(context).textTheme.bodyMedium)),
                       const SizedBox(height: 10,),
                       Text("model: gpt-3.5-turbo, word count: 417, token estimate: 1036", style: material.Theme.of(context).textTheme.bodySmall)
                     ],
@@ -99,7 +110,7 @@ class _ChatContentState extends State<ChatContent> {
                     children: [
                       Text("My", style: material.Theme.of(context).textTheme.bodySmall,),
                       const SizedBox(height: 10,),
-                      SelectableText(message.message.value, style: material.Theme.of(context).textTheme.bodyMedium)
+                      SelectableText(message.getMessage(), style: material.Theme.of(context).textTheme.bodyMedium)
                     ],
                   ),
                 ),
@@ -138,8 +149,11 @@ class _ChatContentState extends State<ChatContent> {
             onPressed: (){
               String text = textEditingController.text;
               textEditingController.text = "";
-              controller.chat(widget.chatSession, text);
-              scrollController.animateTo(scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.ease);
+              controller.chat(widget.chatSession, text, callback: (){
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  _scrollToBottom();
+                });
+              });
             },
           )
         ],

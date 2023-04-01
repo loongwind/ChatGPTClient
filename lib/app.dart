@@ -1,5 +1,6 @@
 
-import 'package:chatgpt_client/controller/ChatController.dart';
+import 'package:chatgpt_client/controller/chat_controller.dart';
+import 'package:chatgpt_client/repository/data_repository.dart';
 import 'package:dart_openai/openai.dart';
 import 'package:get/get.dart';
 

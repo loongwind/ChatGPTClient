@@ -1,0 +1,67 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:6412060380571589125",
+      "lastPropertyId": "2:6559707706064682949",
+      "name": "ChatSession",
+      "properties": [
+        {
+          "id": "1:7000643486693852116",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6559707706064682949",
+          "name": "name",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:986120422415421405",
+          "name": "messages",
+          "targetId": "2:6823399755781780845"
+        }
+      ]
+    },
+    {
+      "id": "2:6823399755781780845",
+      "lastPropertyId": "3:8722626962968777729",
+      "name": "ChatMessage",
+      "properties": [
+        {
+          "id": "1:6568101848183323789",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4152669219768404118",
+          "name": "isChatGPT",
+          "type": 1
+        },
+        {
+          "id": "3:8722626962968777729",
+          "name": "message",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:6823399755781780845",
+  "lastIndexId": "0:0",
+  "lastRelationId": "1:986120422415421405",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
