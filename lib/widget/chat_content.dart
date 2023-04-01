@@ -33,7 +33,7 @@ class _ChatContentState extends State<ChatContent> {
   }
 
   void _scrollToBottom() {
-    scrollController.animateTo(scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 10), curve: Curves.ease);
+    scrollController.animateTo(0, duration: const Duration(milliseconds: 10), curve: Curves.ease);
   }
 
   @override
@@ -44,9 +44,9 @@ class _ChatContentState extends State<ChatContent> {
         children: [
           Expanded(
             child: Obx(() => ListView.builder(itemBuilder: (context, index){
-                ChatMessage chatMsg = widget.chatSession.getMessage(index);
+                ChatMessage chatMsg = widget.chatSession.getMessage(widget.chatSession.getMessagesSize() - index - 1);
                 return chatMsg.isChatGPT ?  buildGPTMessage(chatMsg) : buildMyMessage(chatMsg);
-              }, itemCount: widget.chatSession.getMessagesSize(), controller: scrollController,),
+              }, itemCount: widget.chatSession.getMessagesSize(), controller: scrollController, reverse: true,),
             ),
           ),
           buildEdit(),
