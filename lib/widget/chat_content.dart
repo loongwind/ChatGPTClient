@@ -2,6 +2,7 @@ import 'package:chatgpt_client/controller/chat_controller.dart';
 import 'package:chatgpt_client/model/chat_model.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 class ChatContent extends StatefulWidget {
@@ -16,6 +17,8 @@ class _ChatContentState extends State<ChatContent> {
   TextEditingController textEditingController = TextEditingController();
   material.ScrollController scrollController = material.ScrollController();
   ChatController controller = Get.find();
+  FocusNode focusNode = FocusNode();
+  FocusNode sendTextFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -135,11 +138,36 @@ class _ChatContentState extends State<ChatContent> {
       child: Row(
         children: [
           Expanded(
-              child: TextBox(
-                controller: textEditingController,
+              child:
+              // TextBox(
+              //   autofocus: true,
+              //   focusNode: sendTextFocusNode,
+              //   maxLines: null,
+              //   controller: textEditingController,
+              //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              //   style: material.Theme.of(context).textTheme.bodyLarge,
+              // ),
+
+              RawKeyboardListener(
+                focusNode: focusNode,
+                onKey: (RawKeyEvent event) {
+                  if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
+                    send();
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      textEditingController.text = "";
+                    });
+                  }
+                },
+                child: TextBox(
+                  autofocus: true,
+                  focusNode: sendTextFocusNode,
+                  controller: textEditingController,
+            maxLines: null,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
             style: material.Theme.of(context).textTheme.bodyLarge,
-          )),
+          ),
+              )
+          ),
           const SizedBox(width: 15,),
           FilledButton(
             child: const Padding(
@@ -147,17 +175,21 @@ class _ChatContentState extends State<ChatContent> {
               child: Text('发送'),
             ),
             onPressed: (){
-              String text = textEditingController.text;
-              textEditingController.text = "";
-              controller.chat(widget.chatSession, text, callback: (){
-                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                  _scrollToBottom();
-                });
-              });
+              send();
             },
           )
         ],
       ),
     );
+  }
+
+  void send() {
+    String text = textEditingController.text;
+    textEditingController.text = "";
+    controller.chat(widget.chatSession, text, callback: (){
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        _scrollToBottom();
+      });
+    });
   }
 }
