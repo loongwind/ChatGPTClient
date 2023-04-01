@@ -2,6 +2,7 @@ import 'package:chatgpt_client/controller/chat_controller.dart';
 import 'package:chatgpt_client/model/chat_model.dart';
 import 'package:chatgpt_client/widget/chat_content.dart';
 import 'package:chatgpt_client/widget/create_session_dialog.dart';
+import 'package:chatgpt_client/widget/setting.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
@@ -128,7 +129,7 @@ class _MainWidgetState extends State<MainWidget> {
               PaneItem(
                 icon: const Icon(FluentIcons.settings),
                 title: const Text('设置'),
-                body: Placeholder(),
+                body: const SettingWidget(),
               ),
             ]
           ),

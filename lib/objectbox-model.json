@@ -51,9 +51,78 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:5679351917368176630",
+      "lastPropertyId": "12:1109420711351387203",
+      "name": "Setting",
+      "properties": [
+        {
+          "id": "1:5180521186524149020",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:156640332369893998",
+          "name": "apiKey",
+          "type": 9
+        },
+        {
+          "id": "3:8327294744455413485",
+          "name": "language",
+          "type": 9
+        },
+        {
+          "id": "4:1659438581650627724",
+          "name": "showWordsNum",
+          "type": 1
+        },
+        {
+          "id": "5:2019398041130369989",
+          "name": "model",
+          "type": 9
+        },
+        {
+          "id": "6:8668270066324043578",
+          "name": "maxContextTokens",
+          "type": 6
+        },
+        {
+          "id": "7:5180510701887191288",
+          "name": "maxResponseTokens",
+          "type": 6
+        },
+        {
+          "id": "8:8168946802663992482",
+          "name": "showModelName",
+          "type": 1
+        },
+        {
+          "id": "9:5179136925031225345",
+          "name": "enabledProxy",
+          "type": 1
+        },
+        {
+          "id": "10:2849528444841763127",
+          "name": "proxyType",
+          "type": 9
+        },
+        {
+          "id": "11:5385657915147714141",
+          "name": "proxyHost",
+          "type": 9
+        },
+        {
+          "id": "12:1109420711351387203",
+          "name": "proxyPort",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:6823399755781780845",
+  "lastEntityId": "3:5679351917368176630",
   "lastIndexId": "0:0",
   "lastRelationId": "1:986120422415421405",
   "lastSequenceId": "0:0",

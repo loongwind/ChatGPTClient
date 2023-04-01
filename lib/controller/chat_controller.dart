@@ -1,6 +1,7 @@
 
 
 import 'package:chatgpt_client/model/chat_model.dart';
+import 'package:chatgpt_client/model/setting.dart';
 import 'package:chatgpt_client/repository/data_repository.dart';
 import 'package:get/get.dart';
 import 'package:dart_openai/openai.dart';
@@ -31,6 +32,7 @@ class ChatController extends GetxController{
   }
 
   void chat(ChatSession chatSession, String msg, {Function()? callback}) {
+    Setting setting = repository.getSetting();
     ChatMessage sendMsg = ChatMessage();
     sendMsg.setMessage(msg);
     chatSession.addMessage(sendMsg);
@@ -41,7 +43,8 @@ class ChatController extends GetxController{
     chatSession.addMessage(chatMessage);
     repository.saveChatSession(chatSession);
     Stream<OpenAIStreamChatCompletionModel> chatStream = OpenAI.instance.chat.createStream(
-      model: "gpt-3.5-turbo",
+      model: setting.model,
+      maxTokens: setting.maxResponseTokens,
       messages: [
         OpenAIChatCompletionChoiceMessageModel(
           content: msg,

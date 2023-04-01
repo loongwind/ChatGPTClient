@@ -24,7 +24,6 @@ void main() async{
     await windowManager.focus();
     await windowManager.setPreventClose(true);
   });
-  HttpOverrides.global = ProxiedHttpOverrides("127.0.0.1", "7890");
   await init();
   runApp(const MyApp());
 }

@@ -15,6 +15,7 @@ import 'package:objectbox/objectbox.dart';
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'model/chat_model.dart';
+import 'model/setting.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -66,6 +67,75 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(3, 5679351917368176630),
+      name: 'Setting',
+      lastPropertyId: const IdUid(12, 1109420711351387203),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 5180521186524149020),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 156640332369893998),
+            name: 'apiKey',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 8327294744455413485),
+            name: 'language',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 1659438581650627724),
+            name: 'showWordsNum',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 2019398041130369989),
+            name: 'model',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 8668270066324043578),
+            name: 'maxContextTokens',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 5180510701887191288),
+            name: 'maxResponseTokens',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 8168946802663992482),
+            name: 'showModelName',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 5179136925031225345),
+            name: 'enabledProxy',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 2849528444841763127),
+            name: 'proxyType',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 5385657915147714141),
+            name: 'proxyHost',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(12, 1109420711351387203),
+            name: 'proxyPort',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -89,7 +159,7 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(2, 6823399755781780845),
+      lastEntityId: const IdUid(3, 5679351917368176630),
       lastIndexId: const IdUid(0, 0),
       lastRelationId: const IdUid(1, 986120422415421405),
       lastSequenceId: const IdUid(0, 0),
@@ -163,6 +233,68 @@ ModelDefinition getObjectBoxModel() {
                 .vTableGet(buffer, rootOffset, 8, '');
 
           return object;
+        }),
+    Setting: EntityDefinition<Setting>(
+        model: _entities[2],
+        toOneRelations: (Setting object) => [],
+        toManyRelations: (Setting object) => {},
+        getId: (Setting object) => object.id,
+        setId: (Setting object, int id) {
+          object.id = id;
+        },
+        objectToFB: (Setting object, fb.Builder fbb) {
+          final apiKeyOffset = fbb.writeString(object.apiKey);
+          final languageOffset = fbb.writeString(object.language);
+          final modelOffset = fbb.writeString(object.model);
+          final proxyTypeOffset = fbb.writeString(object.proxyType);
+          final proxyHostOffset = fbb.writeString(object.proxyHost);
+          final proxyPortOffset = fbb.writeString(object.proxyPort);
+          fbb.startTable(13);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, apiKeyOffset);
+          fbb.addOffset(2, languageOffset);
+          fbb.addBool(3, object.showWordsNum);
+          fbb.addOffset(4, modelOffset);
+          fbb.addInt64(5, object.maxContextTokens);
+          fbb.addInt64(6, object.maxResponseTokens);
+          fbb.addBool(7, object.showModelName);
+          fbb.addBool(8, object.enabledProxy);
+          fbb.addOffset(9, proxyTypeOffset);
+          fbb.addOffset(10, proxyHostOffset);
+          fbb.addOffset(11, proxyPortOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = Setting()
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
+            ..apiKey = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 6, '')
+            ..language = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 8, '')
+            ..showWordsNum =
+                const fb.BoolReader().vTableGet(buffer, rootOffset, 10, false)
+            ..model = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 12, '')
+            ..maxContextTokens =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0)
+            ..maxResponseTokens =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0)
+            ..showModelName =
+                const fb.BoolReader().vTableGet(buffer, rootOffset, 18, false)
+            ..enabledProxy =
+                const fb.BoolReader().vTableGet(buffer, rootOffset, 20, false)
+            ..proxyType = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 22, '')
+            ..proxyHost = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 24, '')
+            ..proxyPort = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 26, '');
+
+          return object;
         })
   };
 
@@ -197,4 +329,53 @@ class ChatMessage_ {
   /// see [ChatMessage.message]
   static final message =
       QueryStringProperty<ChatMessage>(_entities[1].properties[2]);
+}
+
+/// [Setting] entity fields to define ObjectBox queries.
+class Setting_ {
+  /// see [Setting.id]
+  static final id = QueryIntegerProperty<Setting>(_entities[2].properties[0]);
+
+  /// see [Setting.apiKey]
+  static final apiKey =
+      QueryStringProperty<Setting>(_entities[2].properties[1]);
+
+  /// see [Setting.language]
+  static final language =
+      QueryStringProperty<Setting>(_entities[2].properties[2]);
+
+  /// see [Setting.showWordsNum]
+  static final showWordsNum =
+      QueryBooleanProperty<Setting>(_entities[2].properties[3]);
+
+  /// see [Setting.model]
+  static final model = QueryStringProperty<Setting>(_entities[2].properties[4]);
+
+  /// see [Setting.maxContextTokens]
+  static final maxContextTokens =
+      QueryIntegerProperty<Setting>(_entities[2].properties[5]);
+
+  /// see [Setting.maxResponseTokens]
+  static final maxResponseTokens =
+      QueryIntegerProperty<Setting>(_entities[2].properties[6]);
+
+  /// see [Setting.showModelName]
+  static final showModelName =
+      QueryBooleanProperty<Setting>(_entities[2].properties[7]);
+
+  /// see [Setting.enabledProxy]
+  static final enabledProxy =
+      QueryBooleanProperty<Setting>(_entities[2].properties[8]);
+
+  /// see [Setting.proxyType]
+  static final proxyType =
+      QueryStringProperty<Setting>(_entities[2].properties[9]);
+
+  /// see [Setting.proxyHost]
+  static final proxyHost =
+      QueryStringProperty<Setting>(_entities[2].properties[10]);
+
+  /// see [Setting.proxyPort]
+  static final proxyPort =
+      QueryStringProperty<Setting>(_entities[2].properties[11]);
 }

@@ -1,5 +1,7 @@
 import 'package:chatgpt_client/model/chat_model.dart';
+import 'package:chatgpt_client/model/setting.dart';
 import 'package:chatgpt_client/objectbox.g.dart';
+import 'package:chatgpt_client/utils/ext.dart';
 import 'package:get/get.dart';
 import 'package:objectbox/objectbox.dart';
 
@@ -7,6 +9,7 @@ class DataRepository {
   late Store _store;
   late final Box<ChatSession> _chatSessionBox = _store.box<ChatSession>();
   late final Box<ChatMessage> _chatMessageBox = _store.box<ChatMessage>();
+  late final Box<Setting> _settingMessageBox = _store.box<Setting>();
 
 
   static Future<DataRepository> create() async{
@@ -34,6 +37,14 @@ class DataRepository {
 
   void deleteChatSession(ChatSession chatSession){
     _chatSessionBox.remove(chatSession.id);
+  }
+
+  void saveSetting(Setting setting){
+    _settingMessageBox.put(setting);
+  }
+
+  Setting getSetting(){
+    return _settingMessageBox.getAll().firstOrNull() ?? Setting();
   }
 
 }

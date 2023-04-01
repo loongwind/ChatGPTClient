@@ -1,16 +1,24 @@
 import 'dart:io';
 
+import 'package:chatgpt_client/model/constant.dart';
+import 'package:chatgpt_client/model/setting.dart';
+import 'package:chatgpt_client/repository/data_repository.dart';
+import 'package:get/get.dart';
+
 class ProxiedHttpOverrides extends HttpOverrides {
-  String _port;
-  String _host;
-  ProxiedHttpOverrides(this._host, this._port);
+  ProxiedHttpOverrides();
 
   @override
   HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-    // set proxy
-      ..findProxy = (uri) {
-        return "PROXY $_host:$_port;";
-      };
+    Setting setting = Get.find<DataRepository>().getSetting();
+    if(setting.enabledProxy){
+      if(setting.proxyType == customProxyType){
+        return super.createHttpClient(context)
+          ..findProxy = (uri) {
+            return "PROXY ${setting.proxyHost}:${setting.proxyPort};";
+          };
+      }
+    }
+    return super.createHttpClient(context);
   }
 }
