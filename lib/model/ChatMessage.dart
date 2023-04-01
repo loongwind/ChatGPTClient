@@ -2,9 +2,11 @@ import 'package:get/get.dart';
 
 
 class ChatSession{
-  final String name ;
+  final name = "".obs;
   final messages = <ChatMessage>[].obs;
-  ChatSession(this.name);
+  ChatSession(String name){
+    this.name.value = name;
+  }
 }
 
 class ChatMessage{

@@ -19,6 +19,9 @@ class ChatController extends GetxController{
     sessions.add(chatSession);
     return chatSession;
   }
+  void addSession(ChatSession session){
+    sessions.add(session);
+  }
 
   void chat(ChatSession chatSession, String msg) {
     ChatMessage sendMsg = ChatMessage();

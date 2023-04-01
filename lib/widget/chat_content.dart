@@ -4,7 +4,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:get/get.dart';
 class ChatContent extends StatefulWidget {
-  const ChatContent({Key? key}) : super(key: key);
+  final ChatSession chatSession;
+  const ChatContent(this.chatSession, {Key? key}) : super(key: key);
 
   @override
   State<ChatContent> createState() => _ChatContentState();
@@ -14,12 +15,10 @@ class _ChatContentState extends State<ChatContent> {
   TextEditingController textEditingController = TextEditingController();
   material.ScrollController scrollController = material.ScrollController();
   ChatController controller = Get.find();
-  late ChatSession chatSession;
 
   @override
   void initState() {
     super.initState();
-    chatSession = controller.createSession();
   }
 
   @override
@@ -30,9 +29,9 @@ class _ChatContentState extends State<ChatContent> {
         children: [
           Expanded(
             child: Obx(() => ListView.builder(itemBuilder: (context, index){
-                ChatMessage chatMsg = chatSession.messages[index];
+                ChatMessage chatMsg = widget.chatSession.messages[index];
                 return chatMsg.isChatGPT ?  buildGPTMessage(chatMsg) : buildMyMessage(chatMsg);
-              }, itemCount: chatSession.messages.length, controller: scrollController,),
+              }, itemCount: widget.chatSession.messages.length, controller: scrollController,),
             ),
           ),
           buildEdit(),
@@ -138,7 +137,7 @@ class _ChatContentState extends State<ChatContent> {
             onPressed: (){
               String text = textEditingController.text;
               textEditingController.text = "";
-              controller.chat(chatSession, text);
+              controller.chat(widget.chatSession, text);
               scrollController.animateTo(scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200), curve: Curves.ease);
             },
           )
