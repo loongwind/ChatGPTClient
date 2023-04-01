@@ -58,6 +58,8 @@ class ChatMessage{
   bool isChatGPT = false;
 
   String message = "";
+  int token = 0;
+  String model = "";
 
   @Transient()
   final _messageObs = "".obs;

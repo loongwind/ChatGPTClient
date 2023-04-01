@@ -1,5 +1,7 @@
 import 'package:chatgpt_client/controller/chat_controller.dart';
 import 'package:chatgpt_client/model/chat_model.dart';
+import 'package:chatgpt_client/model/setting.dart';
+import 'package:chatgpt_client/repository/data_repository.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/services.dart';
@@ -17,6 +19,7 @@ class _ChatContentState extends State<ChatContent> {
   TextEditingController textEditingController = TextEditingController();
   material.ScrollController scrollController = material.ScrollController();
   ChatController controller = Get.find();
+  late Setting setting = Get.find<DataRepository>().getSetting();
   FocusNode focusNode = FocusNode();
   FocusNode sendTextFocusNode = FocusNode();
 
@@ -74,16 +77,16 @@ class _ChatContentState extends State<ChatContent> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Column(
+                  child: Obx(() => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("ChatGPT", style: material.Theme.of(context).textTheme.bodySmall,),
                       const SizedBox(height: 10,),
-                      Obx(() => SelectableText(message.getMessage(), style: material.Theme.of(context).textTheme.bodyMedium)),
+                      SelectableText(message.getMessage(), style: material.Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: 10,),
-                      Text("model: gpt-3.5-turbo, word count: 417, token estimate: 1036", style: material.Theme.of(context).textTheme.bodySmall)
+                      Text((setting.showModelName ? "model: ${message.model}," : "") + (setting.showWordsNum ? " token: ${message.token}" : ""), style: material.Theme.of(context).textTheme.bodySmall)
                     ],
-                  ),
+                  )),
                 ),
               ),
             ],
