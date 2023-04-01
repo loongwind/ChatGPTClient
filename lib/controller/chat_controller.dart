@@ -37,6 +37,7 @@ class ChatController extends GetxController{
     sendMsg.setMessage(msg);
     chatSession.addMessage(sendMsg);
 
+    List<OpenAIChatCompletionChoiceMessageModel> modes = createChatModels(chatSession);
 
     ChatMessage chatMessage = ChatMessage();
     chatMessage.isChatGPT = true;
@@ -45,12 +46,7 @@ class ChatController extends GetxController{
     Stream<OpenAIStreamChatCompletionModel> chatStream = OpenAI.instance.chat.createStream(
       model: setting.model,
       maxTokens: setting.maxResponseTokens,
-      messages: [
-        OpenAIChatCompletionChoiceMessageModel(
-          content: msg,
-          role: OpenAIChatMessageRole.user,
-        )
-      ],
+      messages: modes,
     );
     chatStream.listen((chatStreamEvent) async{
       chatMessage.setMessage(chatMessage.getMessage() + (chatStreamEvent.choices.first.delta.content ?? ""));
@@ -58,6 +54,24 @@ class ChatController extends GetxController{
       callback?.call();
     });
     callback?.call();
+  }
+
+  List<OpenAIChatCompletionChoiceMessageModel> createChatModels(ChatSession session){
+    return session.messages.map((element){
+      OpenAIChatCompletionChoiceMessageModel model;
+      if(element.isChatGPT){
+        model = OpenAIChatCompletionChoiceMessageModel(
+          content: element.message,
+          role: OpenAIChatMessageRole.assistant,
+        );
+      }else{
+        model = OpenAIChatCompletionChoiceMessageModel(
+          content: element.message,
+          role: OpenAIChatMessageRole.user,
+        );
+      }
+      return model;
+    }).toList();
   }
 
   void deleteChatSession(ChatSession chatSession){
