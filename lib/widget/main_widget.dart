@@ -1,5 +1,6 @@
 import 'package:chatgpt_client/controller/chat_controller.dart';
 import 'package:chatgpt_client/model/chat_model.dart';
+import 'package:chatgpt_client/model/intl.dart';
 import 'package:chatgpt_client/widget/chat_content.dart';
 import 'package:chatgpt_client/widget/create_session_dialog.dart';
 import 'package:chatgpt_client/widget/setting.dart';
@@ -22,6 +23,7 @@ class _MainWidgetState extends State<MainWidget> {
   int topIndex = 0;
   @override
   Widget build(BuildContext context) {
+    print(Get.locale?.languageCode);
     return Obx(
       () => NavigationView(
           appBar: NavigationAppBar(
@@ -31,7 +33,7 @@ class _MainWidgetState extends State<MainWidget> {
                   child: Align(
                     alignment: AlignmentDirectional.center,
                     child: Text(
-                      "ChatGPT Client",
+                      S.appName.tr,
                       style: material.Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
@@ -56,9 +58,9 @@ class _MainWidgetState extends State<MainWidget> {
             header: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('会话'),
+                Text(S.session.tr),
                 ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 80),
+                  constraints: BoxConstraints(maxWidth: Get.locale?.languageCode == "zh" ? 80 : 120),
                   child: CommandBar(
                     overflowBehavior: CommandBarOverflowBehavior.wrap,
                     primaryItems: [
@@ -67,7 +69,7 @@ class _MainWidgetState extends State<MainWidget> {
                           FluentIcons.add,
                           size: 12,
                         ),
-                        label: const Text('新会话'),
+                        label: Text(S.newSession.tr),
                         onPressed: () {
                           showCreateSessionDialog(context);
                         },
@@ -92,7 +94,7 @@ class _MainWidgetState extends State<MainWidget> {
                                 FluentIcons.edit,
                                 size: 12,
                               ),
-                              label: const Text('重命名'),
+                              label: Text(S.rename.tr),
                               onPressed: () {
                                 Navigator.pop(context);
                                 showCreateSessionDialog(context, session:session);
@@ -103,7 +105,7 @@ class _MainWidgetState extends State<MainWidget> {
                                 FluentIcons.clear,
                                 size: 12,
                               ),
-                              label: const Text('清除聊天记录'),
+                              label: Text(S.clearMessage.tr),
                               onPressed: () {
                                 Navigator.pop(context);
                                 controller.cleanChatMessage(session);
@@ -114,7 +116,7 @@ class _MainWidgetState extends State<MainWidget> {
                                 FluentIcons.delete,
                                 size: 12,
                               ),
-                              label: const Text('删除'),
+                              label: Text(S.delete.tr),
                               onPressed: () {
                                 Navigator.pop(context);
                                 controller.deleteChatSession(session);
@@ -128,7 +130,7 @@ class _MainWidgetState extends State<MainWidget> {
             footerItems: [
               PaneItem(
                 icon: const Icon(FluentIcons.settings),
-                title: const Text('设置'),
+                title: Text(S.setting.tr),
                 body: const SettingWidget(),
               ),
             ]

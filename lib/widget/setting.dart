@@ -3,6 +3,7 @@ import 'package:chatgpt_client/controller/chat_controller.dart';
 import 'package:chatgpt_client/controller/setting_controller.dart';
 import 'package:chatgpt_client/model/chat_model.dart';
 import 'package:chatgpt_client/model/constant.dart';
+import 'package:chatgpt_client/model/intl.dart';
 import 'package:chatgpt_client/model/setting.dart';
 import 'package:chatgpt_client/widget/chat_content.dart';
 import 'package:chatgpt_client/widget/create_session_dialog.dart';
@@ -64,6 +65,7 @@ class _SettingWidgetState extends State<SettingWidget> {
 
     controller.updateSetting(setting);
     setApiKey(apiKey);
+    Get.updateLocale(setting.language == CN ? const Locale('zh', 'CN') : const Locale('en', 'US'));
   }
 
   @override
@@ -77,10 +79,10 @@ class _SettingWidgetState extends State<SettingWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "设置",
+                S.setting.tr,
                 style: material.Theme.of(context).textTheme.titleLarge,
               ),
-              Button(child: Text("保存", style: material.Theme.of(context).textTheme.bodyMedium?.copyWith(color: material.Theme.of(context).primaryColor),), onPressed: (){
+              Button(child: Text(S.save.tr, style: material.Theme.of(context).textTheme.bodyMedium?.copyWith(color: material.Theme.of(context).primaryColor),), onPressed: (){
                 save();
                 displayInfoBar(context, alignment: Alignment.topCenter, duration:Duration(seconds: 1),builder: (context, close) {
                   return InfoBar(
@@ -132,7 +134,7 @@ class _SettingWidgetState extends State<SettingWidget> {
         Row(
           children: [
             Text(
-              "语言：",
+              "${S.language.tr}：",
               style: material.Theme.of(context).textTheme.bodyMedium,
             ),
             ComboBox<String>(
@@ -150,7 +152,7 @@ class _SettingWidgetState extends State<SettingWidget> {
         const SizedBox(height: 15,),
         ToggleSwitch(
           checked: showNumChecked,
-          content: const Text("显示字数统计"),
+          content: Text(S.showTokenStatic.tr),
           onChanged: (v) => setState(() => showNumChecked = v),
         ),
         const SizedBox(height: 15,),
@@ -163,14 +165,14 @@ class _SettingWidgetState extends State<SettingWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "模型 & 参数设置",
+          S.modelAndParamsSetting.tr,
           style: material.Theme.of(context).textTheme.titleSmall,
         ),
         const SizedBox(height: 15,),
         Row(
           children: [
             Text(
-              "模型：",
+              "${S.model.tr}：",
               style: material.Theme.of(context).textTheme.bodyMedium,
             ),
             ComboBox<String>(
@@ -187,7 +189,7 @@ class _SettingWidgetState extends State<SettingWidget> {
         ),
         const SizedBox(height: 15,),
         InfoLabel(
-            label: "上下文中最大的 Token 数",
+            label: S.maxContextToken.tr,
             child:  Row(
               children: [
                 Expanded(
@@ -210,7 +212,7 @@ class _SettingWidgetState extends State<SettingWidget> {
         ),
         const SizedBox(height: 15,),
         InfoLabel(
-            label: "每个回复的最大 Token 数",
+            label: S.maxResponseToken.tr,
             child:  Row(
               children: [
                 Expanded(
@@ -234,7 +236,7 @@ class _SettingWidgetState extends State<SettingWidget> {
         const SizedBox(height: 15,),
         ToggleSwitch(
           checked: showModelChecked,
-          content: const Text("显示模型名称"),
+          content: Text(S.showModelName.tr),
           onChanged: (v) => setState(() => showModelChecked = v),
         ),
         const SizedBox(height: 15,),
@@ -247,13 +249,13 @@ class _SettingWidgetState extends State<SettingWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "代理设置",
+          S.proxySetting.tr,
           style: material.Theme.of(context).textTheme.titleSmall,
         ),
         const SizedBox(height: 15,),
         ToggleSwitch(
           checked: proxyChecked,
-          content: const Text("是否开启代理"),
+          content: Text(S.enabledProxy.tr),
           onChanged: (v) => setState(() => proxyChecked = v),
         ),
         const SizedBox(height: 15,),
@@ -269,16 +271,16 @@ class _SettingWidgetState extends State<SettingWidget> {
         Row(
           children: [
             Text(
-              "代理类型：",
+              "${S.proxyType.tr}：",
               style: material.Theme.of(context).textTheme.bodyMedium,
             ),
             ComboBox<String>(
               value: selectedProxy,
               items: List.generate(
-                  proxyTypes.length,
+                  proxyTypes().length,
                       (index) => ComboBoxItem(
-                    value: proxyTypes[index],
-                    child: Text(proxyTypes[index]),
+                    value: proxyTypes()[index],
+                    child: Text(proxyTypes()[index]),
                   )),
               onChanged: (type) => setState(() => selectedProxy = type ?? ""),
             ),

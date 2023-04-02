@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:chatgpt_client/app.dart';
 import 'package:chatgpt_client/http/http_overrides.dart';
+import 'package:chatgpt_client/model/intl.dart';
 import 'package:chatgpt_client/widget/main_widget.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:get/get.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -33,11 +35,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return FluentApp(
-      title: 'Flutter Demo',
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: FluentThemeData(accentColor: SystemTheme.accentColor.accent.toAccentColor()),
-      home: MyHomePage(),
+      translations: Intl(),
+      locale: Locale('zh', 'CN'),
+      fallbackLocale: Locale('zh', 'CN'),
+      home: FluentApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: FluentThemeData(accentColor: SystemTheme.accentColor.accent.toAccentColor()),
+        home: MyHomePage(),
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:chatgpt_client/controller/chat_controller.dart';
 import 'package:chatgpt_client/model/chat_model.dart';
+import 'package:chatgpt_client/model/intl.dart';
 import 'package:chatgpt_client/model/setting.dart';
 import 'package:chatgpt_client/repository/data_repository.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -173,9 +174,9 @@ class _ChatContentState extends State<ChatContent> {
           ),
           const SizedBox(width: 15,),
           FilledButton(
-            child: const Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text('发送'),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(S.send.tr),
             ),
             onPressed: (){
               send();
