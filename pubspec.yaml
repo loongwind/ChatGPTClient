@@ -43,6 +43,7 @@ dependencies:
   objectbox_flutter_libs: any
   get: ^4.6.5
   flutter_markdown: ^0.6.14
+  web_socket_channel: ^2.3.0
 
 dev_dependencies:
   flutter_test:

@@ -23,7 +23,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 6412060380571589125),
       name: 'ChatSession',
-      lastPropertyId: const IdUid(2, 6559707706064682949),
+      lastPropertyId: const IdUid(3, 5291310750128814168),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -34,6 +34,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(2, 6559707706064682949),
             name: 'name',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 5291310750128814168),
+            name: 'sessionId',
             type: 9,
             flags: 0)
       ],
@@ -47,7 +52,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(2, 6823399755781780845),
       name: 'ChatMessage',
-      lastPropertyId: const IdUid(3, 8722626962968777729),
+      lastPropertyId: const IdUid(6, 6960348245720094078),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -63,6 +68,21 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(3, 8722626962968777729),
             name: 'message',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 9006858837085236105),
+            name: 'token',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 1829045320003711463),
+            name: 'model',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 6960348245720094078),
+            name: 'messageId',
             type: 9,
             flags: 0)
       ],
@@ -183,9 +203,13 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (ChatSession object, fb.Builder fbb) {
           final nameOffset = fbb.writeString(object.name);
-          fbb.startTable(3);
+          final sessionIdOffset = object.sessionId == null
+              ? null
+              : fbb.writeString(object.sessionId!);
+          fbb.startTable(4);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
+          fbb.addOffset(2, sessionIdOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -196,7 +220,9 @@ ModelDefinition getObjectBoxModel() {
           final object = ChatSession()
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
             ..name = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 6, '');
+                .vTableGet(buffer, rootOffset, 6, '')
+            ..sessionId = const fb.StringReader(asciiOptimization: true)
+                .vTableGetNullable(buffer, rootOffset, 8);
           InternalToManyAccess.setRelInfo(
               object.messages,
               store,
@@ -214,10 +240,17 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (ChatMessage object, fb.Builder fbb) {
           final messageOffset = fbb.writeString(object.message);
-          fbb.startTable(4);
+          final modelOffset = fbb.writeString(object.model);
+          final messageIdOffset = object.messageId == null
+              ? null
+              : fbb.writeString(object.messageId!);
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addBool(1, object.isChatGPT);
           fbb.addOffset(2, messageOffset);
+          fbb.addInt64(3, object.token);
+          fbb.addOffset(4, modelOffset);
+          fbb.addOffset(5, messageIdOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -230,7 +263,13 @@ ModelDefinition getObjectBoxModel() {
             ..isChatGPT =
                 const fb.BoolReader().vTableGet(buffer, rootOffset, 6, false)
             ..message = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 8, '');
+                .vTableGet(buffer, rootOffset, 8, '')
+            ..token =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0)
+            ..model = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 12, '')
+            ..messageId = const fb.StringReader(asciiOptimization: true)
+                .vTableGetNullable(buffer, rootOffset, 14);
 
           return object;
         }),
@@ -311,6 +350,10 @@ class ChatSession_ {
   static final name =
       QueryStringProperty<ChatSession>(_entities[0].properties[1]);
 
+  /// see [ChatSession.sessionId]
+  static final sessionId =
+      QueryStringProperty<ChatSession>(_entities[0].properties[2]);
+
   /// see [ChatSession.messages]
   static final messages =
       QueryRelationToMany<ChatSession, ChatMessage>(_entities[0].relations[0]);
@@ -329,6 +372,18 @@ class ChatMessage_ {
   /// see [ChatMessage.message]
   static final message =
       QueryStringProperty<ChatMessage>(_entities[1].properties[2]);
+
+  /// see [ChatMessage.token]
+  static final token =
+      QueryIntegerProperty<ChatMessage>(_entities[1].properties[3]);
+
+  /// see [ChatMessage.model]
+  static final model =
+      QueryStringProperty<ChatMessage>(_entities[1].properties[4]);
+
+  /// see [ChatMessage.messageId]
+  static final messageId =
+      QueryStringProperty<ChatMessage>(_entities[1].properties[5]);
 }
 
 /// [Setting] entity fields to define ObjectBox queries.

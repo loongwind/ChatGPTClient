@@ -18,6 +18,8 @@ class ChatSession{
   @Entity()
   final messagesObs = <ChatMessage>[].obs;
 
+  String? sessionId;
+
   void init(){
     messagesObs.addAll(messages);
   }
@@ -60,6 +62,7 @@ class ChatMessage{
   String message = "";
   int token = 0;
   String model = "";
+  String? messageId;
 
   @Transient()
   final _messageObs = "".obs;
