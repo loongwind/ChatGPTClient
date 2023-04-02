@@ -259,7 +259,7 @@ class _SettingWidgetState extends State<SettingWidget> {
           onChanged: (v) => setState(() => proxyChecked = v),
         ),
         const SizedBox(height: 15,),
-        proxyChecked ? buildProxyEnabled() : Container(),
+        proxyChecked ? buildProxyCustomSetting() : Container(),
       ],
     );
   }

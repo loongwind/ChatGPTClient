@@ -12,12 +12,12 @@ class ProxiedHttpOverrides extends HttpOverrides {
   HttpClient createHttpClient(SecurityContext? context) {
     Setting setting = Get.find<DataRepository>().getSetting();
     if(setting.enabledProxy){
-      if(setting.proxyType == customProxyType){
+      // if(setting.proxyType == customProxyType){
         return super.createHttpClient(context)
           ..findProxy = (uri) {
             return "PROXY ${setting.proxyHost}:${setting.proxyPort};";
           };
-      }
+      // }
     }
     return super.createHttpClient(context);
   }
