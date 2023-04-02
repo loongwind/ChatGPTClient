@@ -280,7 +280,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                   proxyTypes().length,
                       (index) => ComboBoxItem(
                     value: proxyTypes()[index],
-                    child: Text(proxyTypes()[index]),
+                    child: Text(proxyTypes()[index].tr),
                   )),
               onChanged: (type) => setState(() => selectedProxy = type ?? ""),
             ),

@@ -2,8 +2,8 @@
 import 'package:chatgpt_client/model/intl.dart';
 import 'package:get/get.dart';
 
-final systemProxyType = S.systemProxy.tr;
-final customProxyType = S.customProxy.tr;
+const systemProxyType = S.systemProxy;
+const customProxyType = S.customProxy;
 
 const EN = "English";
 const CN = "简体中文";
