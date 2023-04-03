@@ -80,6 +80,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     controller.updateSetting(setting);
     setApiKey(apiKey);
     Get.updateLocale(setting.language == CN ? const Locale('zh', 'CN') : const Locale('en', 'US'));
+    controller.login();
   }
 
   @override

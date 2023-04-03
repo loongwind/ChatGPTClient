@@ -24,6 +24,7 @@ class ChatController extends GetxController{
       element.init();
     }
     sessions.addAll(list);
+    wsRepository.login();
   }
 
 
@@ -77,8 +78,7 @@ class ChatController extends GetxController{
     model.message = msg;
     if(chatSession.sessionId != null){
       model.conversation_id = chatSession.sessionId;
-    }
-    if(chatSession.messages.isEmpty){
+    }else{
       model.new_title = chatSession.name;
       model.model_name = defaultPlusModel;
     }
