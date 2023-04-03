@@ -1,6 +1,7 @@
 
 
 import 'package:chatgpt_client/model/chat_model.dart';
+import 'package:chatgpt_client/model/constant.dart';
 import 'package:chatgpt_client/model/plus_model.dart';
 import 'package:chatgpt_client/model/setting.dart';
 import 'package:chatgpt_client/repository/data_repository.dart';
@@ -23,7 +24,6 @@ class ChatController extends GetxController{
       element.init();
     }
     sessions.addAll(list);
-    wsRepository.open();
   }
 
 
@@ -36,6 +36,42 @@ class ChatController extends GetxController{
   }
 
   void chat(ChatSession chatSession, String msg, {Function()? callback}) {
+    Setting setting = repository.getSetting();
+    if(setting.isOpenAPI){
+      openApiChat(msg, chatSession, callback);
+    }else{
+      plusChat(msg, chatSession, callback);
+    }
+  }
+
+  void openApiChat(String msg, ChatSession chatSession, Function()? callback) {
+    Setting setting = repository.getSetting();
+    ChatMessage sendMsg = ChatMessage();
+    sendMsg.setMessage(msg);
+    chatSession.addMessage(sendMsg);
+
+    List<OpenAIChatCompletionChoiceMessageModel> modes = createChatModels(chatSession);
+
+    ChatMessage chatMessage = ChatMessage();
+    chatMessage.isChatGPT = true;
+    chatMessage.model = setting.model;
+    chatSession.addMessage(chatMessage);
+    repository.saveChatSession(chatSession);
+    Stream<OpenAIStreamChatCompletionModel> chatStream = OpenAI.instance.chat.createStream(
+      model: setting.model,
+      maxTokens: setting.maxResponseTokens,
+      messages: modes,
+    );
+    chatStream.listen((chatStreamEvent) async{
+      chatMessage.setMessage(chatMessage.getMessage() + (chatStreamEvent.choices.first.delta.content ?? ""));
+      chatMessage.token ++;
+      repository.updateChatMessage(chatMessage);
+      callback?.call();
+    });
+    callback?.call();
+  }
+
+  void plusChat(String msg, ChatSession chatSession, Function()? callback) {
 
     WSRequestModel model = WSRequestModel();
     model.message = msg;
@@ -44,7 +80,7 @@ class ChatController extends GetxController{
     }
     if(chatSession.messages.isEmpty){
       model.new_title = chatSession.name;
-      model.model_name = "text-davinci-002-render-sha";
+      model.model_name = defaultPlusModel;
     }
     if(chatSession.messages.isNotEmpty && chatSession.messages.last.messageId != null){
       model.parent_id = chatSession.messages.last.messageId;
@@ -74,30 +110,6 @@ class ChatController extends GetxController{
       }
     });
     wsRepository.send(model);
-    // Setting setting = repository.getSetting();
-    // ChatMessage sendMsg = ChatMessage();
-    // sendMsg.setMessage(msg);
-    // chatSession.addMessage(sendMsg);
-    //
-    // List<OpenAIChatCompletionChoiceMessageModel> modes = createChatModels(chatSession);
-    //
-    // ChatMessage chatMessage = ChatMessage();
-    // chatMessage.isChatGPT = true;
-    // chatMessage.model = setting.model;
-    // chatSession.addMessage(chatMessage);
-    // repository.saveChatSession(chatSession);
-    // Stream<OpenAIStreamChatCompletionModel> chatStream = OpenAI.instance.chat.createStream(
-    //   model: setting.model,
-    //   maxTokens: setting.maxResponseTokens,
-    //   messages: modes,
-    // );
-    // chatStream.listen((chatStreamEvent) async{
-    //   chatMessage.setMessage(chatMessage.getMessage() + (chatStreamEvent.choices.first.delta.content ?? ""));
-    //   chatMessage.token ++;
-    //   repository.updateChatMessage(chatMessage);
-    //   callback?.call();
-    // });
-    // callback?.call();
   }
 
   List<OpenAIChatCompletionChoiceMessageModel> createChatModels(ChatSession session){

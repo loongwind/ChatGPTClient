@@ -3,20 +3,27 @@ import 'dart:convert';
 
 import 'package:chatgpt_client/generated/json/base/json_convert_content.dart';
 import 'package:chatgpt_client/model/plus_model.dart';
+import 'package:chatgpt_client/model/setting.dart';
+import 'package:chatgpt_client/repository/data_repository.dart';
+import 'package:get/get.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class WSRepository{
 
+  DataRepository repository = Get.find();
+
   IOWebSocketChannel? channel;
   Function(WSResponseModel)? _listener;
+
 
 
   void open() {
     if(channel != null){
       return;
     }
-    final wsUrl = Uri.parse('ws://165.154.36.63:8080/api/conv');
+    Setting setting = repository.getSetting();
+    final wsUrl = Uri.parse('ws://${setting.plusHost}:${setting.plusPort}/api/conv');
     channel = IOWebSocketChannel.connect(wsUrl, headers: {
       "Cookie":"user_auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE2ODA1Mjg1MzV9._-2xxpihp4khC3tB3_VrCzlE7Zx4XRu5i87H2egi32s"
     });

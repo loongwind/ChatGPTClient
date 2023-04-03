@@ -23,6 +23,7 @@ class _SettingWidgetState extends State<SettingWidget> {
   SettingController controller = Get.find();
   late Setting setting = controller.setting;
   late String selectedLanguage = setting.language;
+  late String selectedChatType = setting.isOpenAPI ? typeOpenAPI : typePlus;
   late String selectedModel = setting.model;
   late String selectedProxy = setting.proxyType;
   late bool showNumChecked = setting.showWordsNum;
@@ -36,6 +37,10 @@ class _SettingWidgetState extends State<SettingWidget> {
   TextEditingController responseMaxTokenController = TextEditingController();
   TextEditingController proxyHost = TextEditingController();
   TextEditingController proxyPort = TextEditingController();
+  TextEditingController plusHost = TextEditingController();
+  TextEditingController plusPort = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController pwdController = TextEditingController();
 
   @override
   void initState() {
@@ -45,6 +50,10 @@ class _SettingWidgetState extends State<SettingWidget> {
     apiKeyController.text = setting.apiKey;
     proxyHost.text = setting.proxyHost;
     proxyPort.text = setting.proxyPort;
+    plusHost.text = setting.plusHost;
+    plusPort.text = setting.plusPort;
+    usernameController.text = setting.plusUsername;
+    pwdController.text = setting.plusPassword;
   }
 
   void save(){
@@ -62,6 +71,11 @@ class _SettingWidgetState extends State<SettingWidget> {
     setting.proxyType = selectedProxy;
     setting.proxyHost = proxyHost.text;
     setting.proxyPort = proxyPort.text;
+    setting.isOpenAPI = selectedChatType == typeOpenAPI ;
+    setting.plusHost = plusHost.text ;
+    setting.plusPort = plusPort.text;
+    setting.plusUsername = usernameController.text;
+    setting.plusPassword = pwdController.text;
 
     controller.updateSetting(setting);
     setApiKey(apiKey);
@@ -70,43 +84,27 @@ class _SettingWidgetState extends State<SettingWidget> {
 
   @override
   Widget build(BuildContext context) {
+    bool isOpenAPI = selectedChatType == typeOpenAPI;
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                S.setting.tr,
-                style: material.Theme.of(context).textTheme.titleLarge,
-              ),
-              Button(child: Text(S.save.tr, style: material.Theme.of(context).textTheme.bodyMedium?.copyWith(color: material.Theme.of(context).primaryColor),), onPressed: (){
-                save();
-                displayInfoBar(context, alignment: Alignment.topCenter, duration:Duration(seconds: 1),builder: (context, close) {
-                  return InfoBar(
-                    title: const Text('保存成功'),
-                    action: IconButton(
-                      icon: const Icon(FluentIcons.clear),
-                      onPressed: close,
-                    ),
-                    severity: InfoBarSeverity.success,
-                  );
-                });
-              }),
-            ],
-          ),
+          buildHeader(context),
           const SizedBox(height: 30,),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  buildChatType(),
+                  const SizedBox(height: 15,),
+                  PaneItemSeparator().build(context, Axis.horizontal),
+                  const SizedBox(height: 15,),
                   buildBaseSetting(),
                   PaneItemSeparator().build(context, Axis.horizontal),
-                  buildModelSettingWidget(),
-                  PaneItemSeparator().build(context, Axis.horizontal),
+                  isOpenAPI ? buildModelSettingWidget() : Container(),
+                  isOpenAPI ? PaneItemSeparator().build(context, Axis.horizontal) : Container(),
                   buildProxyWidget(),
                 ],
               ),
@@ -117,19 +115,58 @@ class _SettingWidgetState extends State<SettingWidget> {
     );
   }
 
+  Widget buildHeader(BuildContext context) {
+    return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              S.setting.tr,
+              style: material.Theme.of(context).textTheme.titleLarge,
+            ),
+            Button(child: Text(S.save.tr, style: material.Theme.of(context).textTheme.bodyMedium?.copyWith(color: material.Theme.of(context).primaryColor),), onPressed: (){
+              save();
+              displayInfoBar(context, alignment: Alignment.topCenter, duration:Duration(seconds: 1),builder: (context, close) {
+                return InfoBar(
+                  title: const Text('保存成功'),
+                  action: IconButton(
+                    icon: const Icon(FluentIcons.clear),
+                    onPressed: close,
+                  ),
+                  severity: InfoBarSeverity.success,
+                );
+              });
+            }),
+          ],
+        );
+  }
+
+  Widget buildChatType(){
+    return Row(
+      children: [
+        Text(
+          "${S.chatType.tr}：",
+          style: material.Theme.of(context).textTheme.bodyMedium,
+        ),
+        ComboBox<String>(
+          value: selectedChatType,
+          items: List.generate(
+              chatTypes.length,
+                  (index) => ComboBoxItem(
+                value: chatTypes[index],
+                child: Text(chatTypes[index]),
+              )),
+          onChanged: (chatType) => setState(() => selectedChatType = chatType ?? ""),
+        ),
+      ],
+    );
+  }
+
+
   Widget buildBaseSetting(){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        InfoLabel(
-          label: 'OpenAI API Key:',
-          child: TextBox(
-            controller: apiKeyController,
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            placeholder: '',
-            expands: false,
-          ),
-        ),
+        selectedChatType == typeOpenAPI ? buildEditOpenApiKey() : buildPlusSetting(),
         const SizedBox(height: 15,),
         Row(
           children: [
@@ -156,6 +193,83 @@ class _SettingWidgetState extends State<SettingWidget> {
           onChanged: (v) => setState(() => showNumChecked = v),
         ),
         const SizedBox(height: 15,),
+      ],
+    );
+  }
+
+  Widget buildEditOpenApiKey() {
+    return InfoLabel(
+        label: 'OpenAI API Key:',
+        child: TextBox(
+          controller: apiKeyController,
+          obscureText: true,
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          placeholder: '',
+          expands: false,
+        ),
+      );
+  }
+
+  Widget buildPlusSetting(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Expanded(
+            flex:3,
+            child: InfoLabel(
+              label: 'Host:',
+              child:  TextBox(
+                controller: plusHost,
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                placeholder: 'x.x.x.x',
+                expands: false,
+              ),
+            ),
+          ),
+          const SizedBox(width: 20,),
+          Expanded(
+            flex:1,
+            child: InfoLabel(
+              label: 'Port:',
+              child: TextBox(
+                controller: plusPort,
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                placeholder: '8080',
+                expands: false,
+              ),
+            ),
+          ),
+          Expanded( flex:2, child: Container())
+        ],),
+        const SizedBox(height: 15,),
+        Row(children: [
+          Expanded(
+            flex:2,
+            child: InfoLabel(
+              label: 'username:',
+              child:  TextBox(
+                controller: usernameController,
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                expands: false,
+              ),
+            ),
+          ),
+          const SizedBox(width: 20,),
+          Expanded(
+            flex:2,
+            child: InfoLabel(
+              label: 'password:',
+              child: TextBox(
+                controller: pwdController,
+                obscureText: true,
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                expands: false,
+              ),
+            ),
+          ),
+          Expanded( flex:2, child: Container())
+        ],),
       ],
     );
   }

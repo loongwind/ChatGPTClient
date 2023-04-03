@@ -32,7 +32,11 @@ class _ChatContentState extends State<ChatContent> {
       controller.scrollOffset = scrollController.offset;
     });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      scrollController.jumpTo(controller.scrollOffset);
+      try {
+        scrollController.jumpTo(controller.scrollOffset);
+      } catch (e) {
+        print(e);
+      }
     });
   }
 

@@ -91,7 +91,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(3, 5679351917368176630),
       name: 'Setting',
-      lastPropertyId: const IdUid(12, 1109420711351387203),
+      lastPropertyId: const IdUid(17, 4759505616122108853),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -152,6 +152,31 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(12, 1109420711351387203),
             name: 'proxyPort',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(13, 771975700334502457),
+            name: 'isOpenAPI',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(14, 1846978209381596859),
+            name: 'plusHost',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(15, 4846307900804060010),
+            name: 'plusPort',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(16, 6317766323572490741),
+            name: 'plusUsername',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(17, 4759505616122108853),
+            name: 'plusPassword',
             type: 9,
             flags: 0)
       ],
@@ -288,7 +313,11 @@ ModelDefinition getObjectBoxModel() {
           final proxyTypeOffset = fbb.writeString(object.proxyType);
           final proxyHostOffset = fbb.writeString(object.proxyHost);
           final proxyPortOffset = fbb.writeString(object.proxyPort);
-          fbb.startTable(13);
+          final plusHostOffset = fbb.writeString(object.plusHost);
+          final plusPortOffset = fbb.writeString(object.plusPort);
+          final plusUsernameOffset = fbb.writeString(object.plusUsername);
+          final plusPasswordOffset = fbb.writeString(object.plusPassword);
+          fbb.startTable(18);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, apiKeyOffset);
           fbb.addOffset(2, languageOffset);
@@ -301,6 +330,11 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(9, proxyTypeOffset);
           fbb.addOffset(10, proxyHostOffset);
           fbb.addOffset(11, proxyPortOffset);
+          fbb.addBool(12, object.isOpenAPI);
+          fbb.addOffset(13, plusHostOffset);
+          fbb.addOffset(14, plusPortOffset);
+          fbb.addOffset(15, plusUsernameOffset);
+          fbb.addOffset(16, plusPasswordOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -331,7 +365,17 @@ ModelDefinition getObjectBoxModel() {
             ..proxyHost = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 24, '')
             ..proxyPort = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 26, '');
+                .vTableGet(buffer, rootOffset, 26, '')
+            ..isOpenAPI =
+                const fb.BoolReader().vTableGet(buffer, rootOffset, 28, false)
+            ..plusHost = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 30, '')
+            ..plusPort = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 32, '')
+            ..plusUsername = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 34, '')
+            ..plusPassword = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 36, '');
 
           return object;
         })
@@ -433,4 +477,24 @@ class Setting_ {
   /// see [Setting.proxyPort]
   static final proxyPort =
       QueryStringProperty<Setting>(_entities[2].properties[11]);
+
+  /// see [Setting.isOpenAPI]
+  static final isOpenAPI =
+      QueryBooleanProperty<Setting>(_entities[2].properties[12]);
+
+  /// see [Setting.plusHost]
+  static final plusHost =
+      QueryStringProperty<Setting>(_entities[2].properties[13]);
+
+  /// see [Setting.plusPort]
+  static final plusPort =
+      QueryStringProperty<Setting>(_entities[2].properties[14]);
+
+  /// see [Setting.plusUsername]
+  static final plusUsername =
+      QueryStringProperty<Setting>(_entities[2].properties[15]);
+
+  /// see [Setting.plusPassword]
+  static final plusPassword =
+      QueryStringProperty<Setting>(_entities[2].properties[16]);
 }

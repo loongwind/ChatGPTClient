@@ -18,4 +18,9 @@ class Setting{
   String proxyType = systemProxyType;
   String proxyHost = "";
   String proxyPort = "";
+  bool isOpenAPI = true;
+  String plusHost = "";
+  String plusPort = "";
+  String plusUsername = "";
+  String plusPassword = "";
 }

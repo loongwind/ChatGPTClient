@@ -23,6 +23,7 @@ class S{
   static const String rename = "rename";
   static const String clearMessage = "clearMessage";
   static const String delete = "delete";
+  static const String chatType = "chatType";
 }
 
 
@@ -53,6 +54,7 @@ class Intl extends Translations {
       S.rename : '重命名',
       S.clearMessage : '清除聊天记录',
       S.delete : '删除',
+      S.chatType : '模式',
     },
     'en_US': {
       S.appName: 'ChatGPT Client',
@@ -77,6 +79,7 @@ class Intl extends Translations {
       S.rename: 'Rename',
       S.clearMessage: 'Clear Message',
       S.delete: 'Delete',
+      S.chatType : 'Chat Mode',
     }
   };
 }
