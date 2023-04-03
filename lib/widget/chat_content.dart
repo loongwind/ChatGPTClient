@@ -1,6 +1,7 @@
 import 'package:chatgpt_client/controller/chat_controller.dart';
 import 'package:chatgpt_client/model/chat_model.dart';
 import 'package:chatgpt_client/model/intl.dart';
+import 'package:chatgpt_client/model/res.dart';
 import 'package:chatgpt_client/model/setting.dart';
 import 'package:chatgpt_client/repository/data_repository.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -75,7 +76,7 @@ class _ChatContentState extends State<ChatContent> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipOval(
-                child: Image.network("https://alifei05.cfp.cn/creative/vcg/veer/1600water/veer-140775274.jpg",
+                child: Image.asset(Img.chatGpt,
                   width: 45,height: 45,fit: BoxFit.cover,),
               ),
               const SizedBox(width: 10,),
@@ -128,7 +129,7 @@ class _ChatContentState extends State<ChatContent> {
               ),
               const SizedBox(width: 10,),
               ClipOval(
-                child: Image.network("https://alifei05.cfp.cn/creative/vcg/veer/1600water/veer-140775274.jpg",
+                child: Image.asset(Img.me,
                   width: 45,height: 45,fit: BoxFit.cover,),
               ),
             ],
