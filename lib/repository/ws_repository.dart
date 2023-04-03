@@ -26,13 +26,15 @@ class WSRepository{
     if(setting.isOpenAPI || setting.plusHost.isEmpty || setting.plusPort.isEmpty || setting.plusUsername.isEmpty || setting.plusPassword.isEmpty){
       return;
     }
-      await requestClient.post<String>("http://${setting.plusHost}:${setting.plusPort}${APIS.login}", data: {
-        "username":setting.plusUsername,
-        "password":setting.plusPassword
-      }, headers: {"Content-Type":"application/x-www-form-urlencoded"});
-      final wsUrl = Uri.parse('ws://${setting.plusHost}:${setting.plusPort}/api/conv');
-      List<Cookie> cookies = await APIS.cookieJar.loadForRequest(wsUrl);
-      APIS.serializableCookies = cookies.map((e) => SerializableCookie(e)).toList();
+      await request(() async{
+        await requestClient.post<String>("http://${setting.plusHost}:${setting.plusPort}${APIS.login}", data: {
+          "username":setting.plusUsername,
+          "password":setting.plusPassword
+        }, headers: {"Content-Type":"application/x-www-form-urlencoded"});
+        final wsUrl = Uri.parse('ws://${setting.plusHost}:${setting.plusPort}/api/conv');
+        List<Cookie> cookies = await APIS.cookieJar.loadForRequest(wsUrl);
+        APIS.serializableCookies = cookies.map((e) => SerializableCookie(e)).toList();
+      }, showLoading: false);
       return;
   }
 
@@ -63,15 +65,11 @@ class WSRepository{
   }
 
   Future<Map<String, dynamic>> getCookie(Uri wsUrl) async {
-
-
     if(APIS.serializableCookies == null || APIS.serializableCookies?.isEmpty == true || APIS.serializableCookies?.every((element) => !element.isExpired()) != true){
       await login();
-      return await getCookie(wsUrl);
     }
     Map<String, dynamic> headers = {};
-    for (var element in APIS.serializableCookies!) {
-      print("${element.cookie.name}=${element.cookie.value}");
+    for (var element in APIS.serializableCookies ?? List.empty()) {
       headers["Cookie"] = "${element.cookie.name}=${element.cookie.value}";
     }
     return headers;

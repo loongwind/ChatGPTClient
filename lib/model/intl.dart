@@ -24,6 +24,10 @@ class S{
   static const String clearMessage = "clearMessage";
   static const String delete = "delete";
   static const String chatType = "chatType";
+  static const String warningTip = "warningTip";
+  static const String loginException = "loginException";
+  static const String loginExceptionTips = "loginExceptionTips";
+  static const String saveSuccess = "saveSuccess";
 }
 
 
@@ -55,6 +59,10 @@ class Intl extends Translations {
       S.clearMessage : '清除聊天记录',
       S.delete : '删除',
       S.chatType : '模式',
+      S.warningTip : '异常提示',
+      S.loginException : '登录异常',
+      S.loginExceptionTips : '请检查地址、端口或用户名密码是否填写正确',
+      S.saveSuccess : '保存成功',
     },
     'en_US': {
       S.appName: 'ChatGPT Client',
@@ -80,6 +88,10 @@ class Intl extends Translations {
       S.clearMessage: 'Clear Message',
       S.delete: 'Delete',
       S.chatType : 'Chat Mode',
+      S.warningTip : 'Warning Tips',
+      S.loginException : 'Login Exception',
+      S.loginExceptionTips : 'Please check Host、Port、Username、Password is Right',
+      S.saveSuccess : 'Save Success',
     }
   };
 }

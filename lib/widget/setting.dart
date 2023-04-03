@@ -1,6 +1,7 @@
 import 'package:chatgpt_client/app.dart';
 import 'package:chatgpt_client/controller/chat_controller.dart';
 import 'package:chatgpt_client/controller/setting_controller.dart';
+import 'package:chatgpt_client/http/apis.dart';
 import 'package:chatgpt_client/model/chat_model.dart';
 import 'package:chatgpt_client/model/constant.dart';
 import 'package:chatgpt_client/model/intl.dart';
@@ -37,8 +38,8 @@ class _SettingWidgetState extends State<SettingWidget> {
   TextEditingController responseMaxTokenController = TextEditingController();
   TextEditingController proxyHost = TextEditingController();
   TextEditingController proxyPort = TextEditingController();
-  TextEditingController plusHost = TextEditingController();
-  TextEditingController plusPort = TextEditingController();
+  TextEditingController plusHostController = TextEditingController();
+  TextEditingController plusPortController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController pwdController = TextEditingController();
 
@@ -50,8 +51,8 @@ class _SettingWidgetState extends State<SettingWidget> {
     apiKeyController.text = setting.apiKey;
     proxyHost.text = setting.proxyHost;
     proxyPort.text = setting.proxyPort;
-    plusHost.text = setting.plusHost;
-    plusPort.text = setting.plusPort;
+    plusHostController.text = setting.plusHost;
+    plusPortController.text = setting.plusPort;
     usernameController.text = setting.plusUsername;
     pwdController.text = setting.plusPassword;
   }
@@ -72,10 +73,18 @@ class _SettingWidgetState extends State<SettingWidget> {
     setting.proxyHost = proxyHost.text;
     setting.proxyPort = proxyPort.text;
     setting.isOpenAPI = selectedChatType == typeOpenAPI ;
-    setting.plusHost = plusHost.text ;
-    setting.plusPort = plusPort.text;
-    setting.plusUsername = usernameController.text;
-    setting.plusPassword = pwdController.text;
+    var _plusHost = plusHostController.text;
+    var _plusPort = plusPortController.text;
+    var _plusUsername = usernameController.text;
+    var _plusPassword = pwdController.text;
+    if(_plusHost != setting.plusHost || _plusPort != setting.plusPort || _plusUsername != setting.plusUsername || _plusPassword != setting.plusPassword){
+      // 清除缓存
+      APIS.serializableCookies = null;
+    }
+    setting.plusHost = _plusHost ;
+    setting.plusPort = _plusPort;
+    setting.plusUsername = _plusUsername;
+    setting.plusPassword = _plusPassword;
 
     controller.updateSetting(setting);
     setApiKey(apiKey);
@@ -128,7 +137,7 @@ class _SettingWidgetState extends State<SettingWidget> {
               save();
               displayInfoBar(context, alignment: Alignment.topCenter, duration:Duration(seconds: 1),builder: (context, close) {
                 return InfoBar(
-                  title: const Text('保存成功'),
+                  title: Text(S.saveSuccess.tr),
                   action: IconButton(
                     icon: const Icon(FluentIcons.clear),
                     onPressed: close,
@@ -221,7 +230,7 @@ class _SettingWidgetState extends State<SettingWidget> {
             child: InfoLabel(
               label: 'Host:',
               child:  TextBox(
-                controller: plusHost,
+                controller: plusHostController,
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 placeholder: 'x.x.x.x',
                 expands: false,
@@ -234,7 +243,7 @@ class _SettingWidgetState extends State<SettingWidget> {
             child: InfoLabel(
               label: 'Port:',
               child: TextBox(
-                controller: plusPort,
+                controller: plusPortController,
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 placeholder: '8080',
                 expands: false,

@@ -23,7 +23,6 @@ class _MainWidgetState extends State<MainWidget> {
   int topIndex = 0;
   @override
   Widget build(BuildContext context) {
-    print(Get.locale?.languageCode);
     return Obx(
       () => NavigationView(
           appBar: NavigationAppBar(
