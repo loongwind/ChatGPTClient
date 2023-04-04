@@ -6,7 +6,7 @@ import 'package:objectbox/objectbox.dart';
 class Setting{
   @Id()
   int id = 0;
-
+  String uuid = "";
   String apiKey = "";
   String language = CN;
   bool showWordsNum = false;

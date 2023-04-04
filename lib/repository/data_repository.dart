@@ -1,9 +1,11 @@
+import 'package:chatgpt_client/app.dart';
 import 'package:chatgpt_client/model/chat_model.dart';
 import 'package:chatgpt_client/model/setting.dart';
 import 'package:chatgpt_client/objectbox.g.dart';
 import 'package:chatgpt_client/utils/ext.dart';
 import 'package:get/get.dart';
 import 'package:objectbox/objectbox.dart';
+import 'package:uuid/uuid.dart';
 
 class DataRepository {
   late Store _store;
@@ -20,7 +22,17 @@ class DataRepository {
 
   Future<void> initStore() async {
     _store = await openStore(macosApplicationGroup: "FGDTDLOBXDJ.demo");
+    _initSetting();
     return;
+  }
+
+  void _initSetting() {
+    Setting setting = getSetting();
+    if(setting.uuid.isEmpty){
+      setting.uuid = const Uuid().v4().substring(0,8);
+      saveSetting(setting);
+    }
+    sessionPrefix = setting.uuid;
   }
 
   void saveChatSession(ChatSession chatSession){

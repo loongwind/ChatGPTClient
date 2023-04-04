@@ -11,6 +11,8 @@ import 'package:chatgpt_client/repository/ws_repository.dart';
 import 'package:dart_openai/openai.dart';
 import 'package:get/get.dart';
 
+String sessionPrefix = "";
+
 Future<void> init() async{
   await Get.putAsync(() async{
     return await DataRepository.create();

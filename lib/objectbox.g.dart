@@ -91,7 +91,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(3, 5679351917368176630),
       name: 'Setting',
-      lastPropertyId: const IdUid(17, 4759505616122108853),
+      lastPropertyId: const IdUid(18, 5067868880400441240),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -177,6 +177,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(17, 4759505616122108853),
             name: 'plusPassword',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(18, 5067868880400441240),
+            name: 'uuid',
             type: 9,
             flags: 0)
       ],
@@ -317,7 +322,8 @@ ModelDefinition getObjectBoxModel() {
           final plusPortOffset = fbb.writeString(object.plusPort);
           final plusUsernameOffset = fbb.writeString(object.plusUsername);
           final plusPasswordOffset = fbb.writeString(object.plusPassword);
-          fbb.startTable(18);
+          final uuidOffset = fbb.writeString(object.uuid);
+          fbb.startTable(19);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, apiKeyOffset);
           fbb.addOffset(2, languageOffset);
@@ -335,6 +341,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(14, plusPortOffset);
           fbb.addOffset(15, plusUsernameOffset);
           fbb.addOffset(16, plusPasswordOffset);
+          fbb.addOffset(17, uuidOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -375,7 +382,9 @@ ModelDefinition getObjectBoxModel() {
             ..plusUsername = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 34, '')
             ..plusPassword = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 36, '');
+                .vTableGet(buffer, rootOffset, 36, '')
+            ..uuid = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 38, '');
 
           return object;
         })
@@ -497,4 +506,7 @@ class Setting_ {
   /// see [Setting.plusPassword]
   static final plusPassword =
       QueryStringProperty<Setting>(_entities[2].properties[16]);
+
+  /// see [Setting.uuid]
+  static final uuid = QueryStringProperty<Setting>(_entities[2].properties[17]);
 }

@@ -194,6 +194,9 @@ class _ChatContentState extends State<ChatContent> {
 
   void send() {
     String text = textEditingController.text;
+    if(text.isEmpty){
+      return;
+    }
     textEditingController.text = "";
     controller.chat(widget.chatSession, text, callback: (){
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

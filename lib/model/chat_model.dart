@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:chatgpt_client/app.dart';
 import 'package:get/get.dart';
 import 'package:objectbox/objectbox.dart';
 
@@ -26,12 +27,17 @@ class ChatSession{
 
 
   void setName(String name){
-    this.name = name;
-    nameObs.value = name;
+    String convertName = "$sessionPrefix-$name";
+    this.name = convertName;
+    nameObs.value = convertName;
   }
 
   String getName(){
-    return nameObs.value.isEmpty ?  name : nameObs.value;
+    String result = nameObs.value.isEmpty ?  name : nameObs.value;
+    if(result.startsWith(sessionPrefix)){
+      result = result.substring(sessionPrefix.length+1, result.length);
+    }
+    return result;
   }
 
   void addMessage(ChatMessage message){
