@@ -38,17 +38,10 @@ class _MainWidgetState extends State<MainWidget> {
                   ),
                 );
               }(),
-              actions: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // WindowButtons()
-                  if (isWindows) const WindowButtons() else Container()
-                ],
+              actions: Align(
+                alignment: Alignment.centerRight,
+                child: isWindows ? const WindowButtons() : Container(),
               )
-            // actions: defaultTargetPlatform == TargetPlatform.windows
-            //     ? const WindowButtons()
-            //     : null
           ),
           pane: NavigationPane(
             selected: topIndex,

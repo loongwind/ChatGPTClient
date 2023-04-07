@@ -27,11 +27,11 @@ class WSRepository{
       return;
     }
       await request(() async{
-        await requestClient.post<String>("http://${setting.plusHost}:${setting.plusPort}${APIS.login}", data: {
+        await requestClient.post<String>("https://${setting.plusHost}:${setting.plusPort}${APIS.login}", data: {
           "username":setting.plusUsername,
           "password":setting.plusPassword
         }, headers: {"Content-Type":"application/x-www-form-urlencoded"});
-        final wsUrl = Uri.parse('ws://${setting.plusHost}:${setting.plusPort}/api/conv');
+        final wsUrl = Uri.parse('wss://${setting.plusHost}:${setting.plusPort}/api/conv');
         List<Cookie> cookies = await APIS.cookieJar.loadForRequest(wsUrl);
         APIS.serializableCookies = cookies.map((e) => SerializableCookie(e)).toList();
       }, showLoading: false);
@@ -44,7 +44,7 @@ class WSRepository{
       return;
     }
     Setting setting = repository.getSetting();
-    final wsUrl = Uri.parse('ws://${setting.plusHost}:${setting.plusPort}/api/conv');
+    final wsUrl = Uri.parse('wss://${setting.plusHost}:${setting.plusPort}/api/conv');
     Map<String, dynamic> headers = await getCookie(wsUrl);
 
     channel = IOWebSocketChannel.connect(wsUrl, headers: headers);
